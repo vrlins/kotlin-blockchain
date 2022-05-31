@@ -1,3 +1,5 @@
 # kotlin-blockchain
 
-Construindo uma Blockchain em Kotlin para ter uma melhor compreensão de como uma Blockchain funciona.
+Construindo uma Blockchain em Kotlin.
+
+Artigo em: https://dev.to/victorrlins/construindo-uma-blockchain-em-kotlin-3kg5
