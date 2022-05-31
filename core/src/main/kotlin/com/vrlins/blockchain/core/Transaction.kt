@@ -27,5 +27,5 @@ data class Transaction(
 }
 
 fun List<Transaction>.hash(): String {
-    return joinToString { it.hash }
+    return joinToString { it.hash }.hash()
 }

@@ -25,5 +25,5 @@ class TransactionInput(
 }
 
 fun List<TransactionInput>.hash(): String {
-    return joinToString { it.hash }
+    return joinToString { it.hash }.hash()
 }
