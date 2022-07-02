@@ -1,6 +1,7 @@
 package com.vrlins.blockchain.core
 
 import java.security.PrivateKey
+import java.security.PublicKey
 import java.time.Instant
 
 data class Transaction(
@@ -13,6 +14,10 @@ data class Transaction(
 
     val amount: Int
         get() = outputs.sumOf { it.amount }
+
+    fun isMine(publicKey: PublicKey): Boolean {
+        return inputs.all { it.transactionOutput.isMine(publicKey) }
+    }
 
     fun sign(privateKey: PrivateKey): Transaction {
         inputs.forEach {

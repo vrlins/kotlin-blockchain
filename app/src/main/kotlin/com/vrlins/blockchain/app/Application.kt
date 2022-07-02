@@ -55,6 +55,12 @@ fun Application.mainModule(blockChain: BlockChain, wallet: Wallet) {
                 BlockResponse.of(block)
             )
         }
+        get("transactions/pending") {
+            call.respond(
+                HttpStatusCode.OK,
+                TransactionResponse.of(blockChain.transactionPool)
+            )
+        }
         get("blockchain/status") {
             call.respond(
                 HttpStatusCode.OK,

@@ -15,9 +15,26 @@ data class Wallet(val publicKey: PublicKey, val privateKey: PrivateKey, val bloc
     val balance: Int
         get() = blockChain.balanceBy(publicKey)
 
+    private val pendingAmountToSend: Int
+        get() = blockChain.getPendingTransactionsBy(publicKey)
+            .flatMap { it.outputs }
+            .filter { !it.isMine(publicKey) }
+            .sumOf { it.amount }
+
     fun sendFundsTo(recipient: PublicKey, amountToSend: Int): Transaction {
-        if (amountToSend > balance) {
+        if (amountToSend + pendingAmountToSend > balance) {
             throw IllegalArgumentException("Insufficient funds")
+        }
+
+        val unspentTransactionsOutputs = getUnspentTransactionsOutputs()
+        val pendingTransactionsInputs = getPendingTransactions().flatMap { it.inputs }
+
+        val availableUnspentTransactions = unspentTransactionsOutputs.filter { output ->
+            pendingTransactionsInputs.none { input -> input.transactionOutput.hash == output.hash }
+        }
+
+        if (availableUnspentTransactions.isEmpty()) {
+            throw IllegalArgumentException("Pending transactions need to be mined")
         }
 
         val tx = Transaction()
@@ -25,7 +42,7 @@ data class Wallet(val publicKey: PublicKey, val privateKey: PrivateKey, val bloc
 
         var collectedAmount = 0
 
-        for (myTx in getMyTransactions()) {
+        for (myTx in availableUnspentTransactions) {
             collectedAmount += myTx.amount
             tx.inputs.add(TransactionInput(myTx, collectedAmount))
 
@@ -46,8 +63,11 @@ data class Wallet(val publicKey: PublicKey, val privateKey: PrivateKey, val bloc
         return tx.sign(privateKey)
     }
 
-    private fun getMyTransactions(): Collection<TransactionOutput> {
-        return blockChain.getTransactionsBy(publicKey)
+    private fun getUnspentTransactionsOutputs(): Collection<TransactionOutput> {
+        return blockChain.getUnspentTransactionsOutputsBy(publicKey)
     }
 
+    private fun getPendingTransactions(): Collection<Transaction> {
+        return blockChain.getPendingTransactionsBy(publicKey)
+    }
 }

@@ -2,14 +2,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.6.20"
-    "java-library"
 }
 
 repositories {
     mavenCentral()
 }
 
-group = "com.victorrlins"
+group = "com.vrlins"
 version = "1.0"
 
 dependencies {

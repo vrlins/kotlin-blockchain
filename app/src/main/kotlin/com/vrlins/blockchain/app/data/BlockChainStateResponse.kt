@@ -2,10 +2,18 @@ package com.vrlins.blockchain.app.data
 
 import com.vrlins.blockchain.core.BlockChain
 
-data class BlockChainStateResponse(val isValid: Boolean, val blockHeight: Int) {
+data class BlockChainStateResponse(
+    val isValid: Boolean,
+    val blockHeight: Int,
+    val difficulty: Int
+) {
     companion object {
         fun of(blockChain: BlockChain): BlockChainStateResponse {
-            return BlockChainStateResponse(blockChain.isValid(), blockChain.blocks.size)
+            return BlockChainStateResponse(
+                blockChain.isValid(),
+                blockChain.blocks.size,
+                blockChain.difficulty
+            )
         }
     }
 }

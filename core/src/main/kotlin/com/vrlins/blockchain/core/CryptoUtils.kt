@@ -3,6 +3,7 @@ package com.vrlins.blockchain.core
 import java.math.BigInteger
 import java.security.*
 import java.security.spec.ECGenParameterSpec
+import java.security.spec.NamedParameterSpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
@@ -18,9 +19,12 @@ fun String.hash(algorithm: String = DEFAULT_HASH_ALGORITHM): String {
     return String.format("%064x", BigInteger(1, messageDigest.digest()))
 }
 
-fun generateKeyPair(keyAlgorithm: String = ELLIPTIC_CURVE_KEY_GEN_ALGORITHM): KeyPair {
+fun generateKeyPair(
+    keyAlgorithm: String = ELLIPTIC_CURVE_KEY_GEN_ALGORITHM,
+    namedParameterSpec: NamedParameterSpec = ECGenParameterSpec(EC_STANDARD_CURVE_NAME)
+): KeyPair {
     val keyGen = KeyPairGenerator.getInstance(keyAlgorithm)
-    keyGen.initialize(ECGenParameterSpec(EC_STANDARD_CURVE_NAME), SecureRandom())
+    keyGen.initialize(namedParameterSpec, SecureRandom())
     return keyGen.generateKeyPair()
 }
 

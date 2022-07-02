@@ -9,7 +9,7 @@ plugins {
 group = "com.vrlins"
 version = "1.0"
 
-val ktorVersion = "2.0.1"
+val ktorVersion = "2.0.2"
 val logbackVersion = "1.2.11"
 
 dependencies {
