@@ -24,3 +24,25 @@ data class Block(
         return minedBlock
     }
 }
+
+
+fun List<Block>.isValid(targetPrefix: String): Boolean {
+    if (size == 1) {
+        return first().isValid(targetPrefix)
+    }
+
+    for (i in 1 until size) {
+        val previousBlock = get(i - 1)
+        val currentBlock = get(i)
+
+        if (
+            previousBlock.hash != currentBlock.previousHash ||
+            !previousBlock.isValid(targetPrefix) ||
+            !currentBlock.isValid(targetPrefix)
+        ) {
+            return false
+        }
+    }
+
+    return true
+}
